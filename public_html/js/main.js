@@ -2,7 +2,7 @@
     // map drawing stuff                                                                                                           //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			var map = L.map('map').setView([-42.8331, 147.2758], 14);
+			var map = L.map('map').setView([-42.8112, 147.2758], 12);
 			var osm = L.tileLayer('http://{s}.tile.cloudmade.com/572b6fba019c460cbc0c68b07da7dc2b/997/256/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 					maxZoom: 18
@@ -37,29 +37,46 @@
     "List Basemap": listLayers
     };
     
-    var gccAtt = 'GovHack 2103, <a href="http://creativecommons.org/licenses/by/3.0/au/">CC-BY</a>'
-    var stormwater = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
+    var gccAtt = 'GovHack 2103, <a href="http://creativecommons.org/licenses/by/3.0/au/">CC-BY</a>';
+//    var coastalrefuges = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
+//            layers: 'ips:Agcc_REF_CoastRefugia',
+//            format: 'image/png',
+//            transparent: true,
+//            //code:'EPSG:4326',           
+//						//srs: 'EPSG:4326',
+//						crs: L.CRS.EPSG4326,
+//						srs: L.CRS.EPSG4326,
+//						attribution: gccAtt
+//    });
+    //L.CRS.EPSG4326
+     var stormwater = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
             layers: 'GCC_cc:Stormwater',
             format: 'image/png',
             transparent: true,
     attribution: gccAtt
     });
-
-//    var acc_labels = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
-//            layers: 'GCC_cc:Stormwaterpits_acc_labels',
+    
+    
+//    var GeologicUnit = new L.TileLayer.WMS("http://www.ga.gov.au/geows/geologicunits/oneg_aus_2_5m/wfs", {
+//            layers: 'EastAUS_GA_1M_BA',
 //            format: 'image/png',
 //            transparent: true,
-//    maxZoom: 20,
 //    attribution: gccAtt
 //    });
 
+
+
     map.addLayer(listLayers);
     map.addLayer(stormwater);
-//    map.addLayer(acc_labels);    
+    //map.addLayer(GeologicUnit);
+    //map.addLayer(coastalrefuges);
+       
 
     var overlays = {
     "SW Pipes and Pits": stormwater,
-//    "SW Accuracy Labels": acc_labels
+    //"Surface geologic units": GeologicUnit,
+    //"Coastal refuges": coastalrefuges,
+    
     };
  
     //Layer control
