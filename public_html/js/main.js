@@ -57,39 +57,45 @@
     };
     
     var gccAtt = 'GovHack 2103, <a href="http://creativecommons.org/licenses/by/3.0/au/">CC-BY</a>';
-    var coastalrefuges = new L.TileLayer.WMS("http://www.ga.gov.au/wms/getmap?dataset=geows&", {
-            layers: 'AUS_GA_2500k_BLS',
+    
+    var coastalprotection = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms?SERVICE=WMS&", {
+            layers: 'ips:E11_0_Waterway_and_Coastal_Protection_Code',
             format: 'image/png',
-            transparent: true
+            transparent: true,
+    				attribution: gccAtt
     });
-    //L.CRS.EPSG4326
      var stormwater = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
             layers: 'GCC_cc:Stormwater',
             format: 'image/png',
             transparent: true,
     attribution: gccAtt
+    });      
+
+    var erosion = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms?SERVICE=WMS&", {
+            layers: 'ips:E14_0_Coastal_Erosion_Hazard_Code',
+            format: 'image/png',
+            transparent: true,
+    				attribution: gccAtt
     });
     
     
-//    var GeologicUnit = new L.TileLayer.WMS("http://www.ga.gov.au/geows/geologicunits/oneg_aus_2_5m/wfs", {
-//            layers: 'EastAUS_GA_1M_BA',
-//            format: 'image/png',
-//            transparent: true,
-//    attribution: gccAtt
-//    });
+    var test = new L.TileLayer.WMS("http://www.mrt.tas.gov.au/iwms/ecwp/ImageX.dll?dsinfo?layer=/mrt/images/all_tas/tas_geology250k.ecw", {
+            layers: 'ALL_TAS_TAS_GEOLOGY250K.ECW',
+            format: 'image/png',
+            transparent: true,
+    				attribution: gccAtt
+    });
 
 
 
     map.addLayer(listLayers);
-    //map.addLayer(stormwater);
-    //map.addLayer(GeologicUnit);
-    //map.addLayer(coastalrefuges);
-       
+    map.addLayer(test);      
 
     var overlays = {
     "SW Pipes and Pits": stormwater,
-    //"Surface geologic units": GeologicUnit,
-    "Coastal refuges": coastalrefuges,
+    "Coastal protection areas": coastalprotection,
+    "Erosion hazard zones": erosion,
+    "test": test,
     
     };
  
