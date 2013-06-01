@@ -2,7 +2,7 @@
     // map drawing stuff                                                                                                           //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			var map = L.map('map').setView([-42.8112, 147.2758], 12);
+			var map = L.map('map').setView([-42.8112, 147.2758], 13);
 			var osm = L.tileLayer('http://{s}.tile.cloudmade.com/572b6fba019c460cbc0c68b07da7dc2b/997/256/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 					maxZoom: 18
@@ -24,6 +24,8 @@
         minZoom: 19,
         maxZoom: 20
     });
+    
+    
     var LISTBasemap = new L.tileLayer("http://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Topographic/ImageServer/tile/{z}/{y}/{x}", {
         attribution: "Basemap &copy The LIST",
         maxZoom: 18
@@ -31,23 +33,35 @@
     var listLayers = L.layerGroup([LISTBasemap, LISTBasemapWMS])
 
 
+    
+    var LISTBasemapWMS2 = new L.tileLayer.wms("http://services.thelist.tas.gov.au/arcgis/rest/services/Public/MarineAndCoastal/MapServer/79", {
+        layers: 'MarineAndCoastal',
+        format: 'image/png',
+        transparent: true,
+        attribution: "Basemap &copy The LIST",
+        minZoom: 19,
+        maxZoom: 20
+    });
+     var LISTBasemap2 = new L.tileLayer("http://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/MarineAndCoastal/ImageServer/tile/{z}/{y}/{x}", {
+        attribution: "Basemap &copy The LIST",
+        maxZoom: 18
+    });
+    var listLayers2 = L.layerGroup([LISTBasemap2, LISTBasemapWMS2])
+    
+    
     var baselayers = {
     "Open Street Map": osm,
     //"Google Maps": ggl,
-    "List Basemap": listLayers
+    "List Basemap": listLayers,
+    "List Basemap2": listLayers2
     };
     
     var gccAtt = 'GovHack 2103, <a href="http://creativecommons.org/licenses/by/3.0/au/">CC-BY</a>';
-//    var coastalrefuges = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
-//            layers: 'ips:Agcc_REF_CoastRefugia',
-//            format: 'image/png',
-//            transparent: true,
-//            //code:'EPSG:4326',           
-//						//srs: 'EPSG:4326',
-//						crs: L.CRS.EPSG4326,
-//						srs: L.CRS.EPSG4326,
-//						attribution: gccAtt
-//    });
+    var coastalrefuges = new L.TileLayer.WMS("http://www.ga.gov.au/wms/getmap?dataset=geows&", {
+            layers: 'AUS_GA_2500k_BLS',
+            format: 'image/png',
+            transparent: true
+    });
     //L.CRS.EPSG4326
      var stormwater = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
             layers: 'GCC_cc:Stormwater',
@@ -67,7 +81,7 @@
 
 
     map.addLayer(listLayers);
-    map.addLayer(stormwater);
+    //map.addLayer(stormwater);
     //map.addLayer(GeologicUnit);
     //map.addLayer(coastalrefuges);
        
@@ -75,7 +89,7 @@
     var overlays = {
     "SW Pipes and Pits": stormwater,
     //"Surface geologic units": GeologicUnit,
-    //"Coastal refuges": coastalrefuges,
+    "Coastal refuges": coastalrefuges,
     
     };
  
@@ -140,3 +154,21 @@ $("#addmarker").submit(function(event){
     // prevent default posting of form
     event.preventDefault();
 });
+
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // preload form with current lat/long                                                                                          //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    jQuery(window).ready(function(){   
+
+        navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
+  
+        function handle_geolocation_query(position){  
+            $('#lat').value(position.coords.latitude);  
+            $('#long').value(position.coords.longitude);  
+        } 
+    });
+    
