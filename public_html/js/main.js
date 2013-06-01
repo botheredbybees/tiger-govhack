@@ -1,8 +1,12 @@
-var map = L.map('map').setView([-42.8331, 147.2758], 14);
-var osm = L.tileLayer('http://{s}.tile.cloudmade.com/572b6fba019c460cbc0c68b07da7dc2b/997/256/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-    maxZoom: 20
-}).addTo(map);
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // map drawing stuff                                                                                                           //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			var map = L.map('map').setView([-42.8331, 147.2758], 14);
+			var osm = L.tileLayer('http://{s}.tile.cloudmade.com/572b6fba019c460cbc0c68b07da7dc2b/997/256/{z}/{x}/{y}.png', {
+					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+					maxZoom: 18
+			}).addTo(map);
 
 
 
@@ -41,34 +45,81 @@ var osm = L.tileLayer('http://{s}.tile.cloudmade.com/572b6fba019c460cbc0c68b07da
     attribution: gccAtt
     });
 
-    var acc_labels = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
-            layers: 'GCC_cc:Stormwaterpits_acc_labels',
-            format: 'image/png',
-            transparent: true,
-    maxZoom: 20,
-    attribution: gccAtt
-    });
+//    var acc_labels = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
+//            layers: 'GCC_cc:Stormwaterpits_acc_labels',
+//            format: 'image/png',
+//            transparent: true,
+//    maxZoom: 20,
+//    attribution: gccAtt
+//    });
 
     map.addLayer(listLayers);
     map.addLayer(stormwater);
-    map.addLayer(acc_labels);    
+//    map.addLayer(acc_labels);    
 
     var overlays = {
     "SW Pipes and Pits": stormwater,
-    "SW Accuracy Labels": acc_labels
+//    "SW Accuracy Labels": acc_labels
     };
-
-    //Location control
-    L.control.locate({
-        position: 'topright',  
-        drawCircle: false,
-        follow: false
-    }).addTo(map);
-    //Zoom control
-    L.control.zoom().addTo(map);    
+ 
     //Layer control
     L.control.layers(baselayers, overlays, {position: 'topleft'}).addTo(map);
-    //Search control
-    L.control.searchControl().addTo(map);
 
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // form processing                                                                                                             //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    // variable to hold request
+var request;
+// bind to the submit event of our form
+$("#addmarker").submit(function(event){
+    // abort any pending request
+    if (request) {
+        request.abort();
+    }
+    // setup some local variables
+    var $form = $(this);
+    // let's select and cache all the fields
+    var $inputs = $form.find("input, select, button, textarea");
+    // serialize the data in the form
+    var serializedData = $form.serialize();
+
+    // let's disable the inputs for the duration of the ajax request
+    $inputs.prop("disabled", true);
+
+    // fire off the request to /form.php
+    var request = $.ajax({
+        url: "addmarker.php",
+        type: "post",
+        data: serializedData
+    });
+
+    // callback handler that will be called on success
+    request.done(function (response, textStatus, jqXHR){
+        // log a message to the console
+        console.log("Hooray, it worked. Marker added! Response: "+response);
+        if (response == 'OK') {
+        	$('#instructions').text('Thanks for posting, your data has been added to the moderator queue and will appear on the map shortly');
+        }
+    });
+
+    // callback handler that will be called on failure
+    request.fail(function (jqXHR, textStatus, errorThrown){
+        // log the error to the console
+        console.error(
+            "The following error occured: "+
+            textStatus, errorThrown
+        );
+    });
+
+    // callback handler that will be called regardless
+    // if the request failed or succeeded
+    request.always(function () {
+        // reenable the inputs
+        $inputs.prop("disabled", false);
+    });
+
+    // prevent default posting of form
+    event.preventDefault();
+});

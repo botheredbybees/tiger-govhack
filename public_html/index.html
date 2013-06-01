@@ -25,6 +25,10 @@
 				<![endif]-->
 
 				<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+				<link rel="stylesheet" href="css/MarkerCluster.css" />
+				<link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+				<!--[if lte IE 8]><link rel="stylesheet" href="../dist/MarkerCluster.Default.ie.css" /><![endif]-->
+				<script src="js/vendor/leaflet.markercluster.js"></script>
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -44,22 +48,22 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="#">Explore Glenorchy</a>
+                    <a class="brand" href="#">Our Healthy Waterways</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav">
                             <li class="active"><a href="#">Home</a></li>
-                            <li><a href="#about">About</a></li>
-                            <li><a href="#contact">Contact</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li class="nav-header">Nav header</li>
-                                    <li><a href="#">Separated link</a></li>
-                                    <li><a href="#">One more separated link</a></li>
+                            <li><a href="http://tiger.scriptforge.org/blog/">About</a></li>
+<!--                            <li><a href="#contact">Contact</a></li>-->
+<!--                            <li class="dropdown">-->
+<!--                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>-->
+<!--                                <ul class="dropdown-menu">-->
+<!--                                    <li><a href="#">Action</a></li>-->
+<!--                                    <li><a href="#">Another action</a></li>-->
+<!--                                    <li><a href="#">Something else here</a></li>-->
+<!--                                    <li class="divider"></li>-->
+<!--                                    <li class="nav-header">Nav header</li>-->
+<!--                                    <li><a href="#">Separated link</a></li>-->
+<!--                                    <li><a href="#">One more separated link</a></li>-->
                                 </ul>
                             </li>
                         </ul>
@@ -83,26 +87,31 @@
             <!-- Example row of columns -->
             <div class="row">
                 <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
+                    <h2>Keeping our waterways healthy</h2>
+                    <p>The story goes here </p>
                 </div>
                 <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
+                    <h2>Add a marker</h2>
+                    <p id="instructions">Add a marker to the map with a report and/or a picture</p>
+                    <form id="addmarker">
+
+												<label for="note">Details:</label>
+												<textarea id="note" name="note" rows="5"></textarea><br>
+
+												<input type="submit" value="Add marker" />
+
+										</form>
                </div>
                 <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
+                    <h2>Help</h2>
+                    <p>Some stuff here about how to select different maps and overlays</p>
                 </div>
             </div>
 
             <hr>
 
             <footer>
-                <p>&copy; Company 2012</p>
+                <p>A <a href="http://hackerspace.govhack.org/" target="_blank">GovHack 2013</p> project</p>
             </footer>
 
         </div> <!-- /container -->
