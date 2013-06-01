@@ -94,36 +94,102 @@
 var request;
 // bind to the submit event of our form
 $("#addmarker").submit(function(event){
-    senddata($(this));
+    validate_user_submission($(this));
 });
 
-var senddata = function($form) {
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // preload form with current lat/long                                                                                          //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    jQuery(window).ready(function(){   
+
+        navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
+  
+        function handle_geolocation_query(position){  
+            $('#lat').attr('value',position.coords.latitude);  
+            $('#long').attr('value',position.coords.longitude);  
+        } 
+    });
+    
+
+// Add new site photo image reading, form validation and submission fucntions
+
+// This code has some extra stuff to try to read EXIF data but it is unfinished
+map.on('click', addUserMarker);
+
+var usermarker = L.marker();
+usermarker.addTo(map);
+function addUserMarker(e) {
+  // Update form fields
+  document.getElementById("lat").value= e.latlng.lat;
+  document.getElementById("long").value= e.latlng.lng;
+  // Add a marker with popup here
+  usermarker.setLatLng(e.latlng);
+  usermarker.update();
+}
+
+function loadImageFile() {
+  if (document.getElementById("userpic").files.length === 0) { return; }
+    document.getElementById("marker_popup").innerHTML = '<h3>Image Preview</h3><img id="uploadPreview" src="" />';
+    oFReader = new FileReader(), rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
+ 
+    oFReader.onload = function (oFREvent) {
+    document.getElementById("uploadPreview").src = oFREvent.target.result;
+    };
+
+    var oFile = document.getElementById("userpic").files[0];
+      if (!rFilter.test(oFile.type)) { 
+          document.getElementById("marker_popup").innerHTML = '<h4 id="submission_error">Error:</h4><p>You must select a valid image file!</p>'; 
+          return; 
+      }   
+      oFReader.readAsDataURL(oFile);
+      
+}
+
+var validate_user_submission = function($form) {
 	// abort any pending request
     if (request) {
         request.abort();
     }
     
-    // let's select and cache all the fields
-    var $inputs = $form.find("input, select, button, textarea");
-    // serialize the data in the form
-    var serializedData = $form.serialize();
+    // Validate
+	caption = document.getElementById("caption");
+	note = document.getElementById("note");
+	latitude = parseFloat(document.getElementById("lat")).value;
+	longitude = parseFloat(document.getElementById("long")).value;
+	if (latitude < -90 || latitude > 90) {
+		$('#marker_popup').text('Error: Latitude is out of range');
+		return;
+	}
+	if (longitude < -180 || longitude > 180) {
+		$('#marker_popup').text('Error: Longitude is out of range');
+		return;
+	}
+	if (note.length < 1) {
+		$('#marker_popup').text('Error: You need to add a note.');
+		return;
+	}
+	if (caption.length < 1) {
+		$('#marker_popup').text('Error: You need to add a title/caption.');
+		return;
+	}
 
-    // let's disable the inputs for the duration of the ajax request
-    $inputs.prop("disabled", true);
-
-    // fire off the request to /form.php
-    var request = $.ajax({
-        url: "addmarker.php",
-        type: "post",
-        data: serializedData
-    });
+	// Make an AJAX call and get the response
+	var formData = new FormData($('#addmarker'));
+	jQuery.ajax('/marker/add', {
+		processData: false,
+		contentType: false,
+    		data: formData,
+		type: "POST"
+	});    
 
     // callback handler that will be called on success
     request.done(function (response, textStatus, jqXHR){
         // log a message to the console
         
         if (response == 'OK') {
-        	$('#instructions').text('Thanks for posting, your data has been added to the moderator queue and will appear on the map shortly');
+        	$('#marker_popup').text('Thanks for posting, your data has been added to the list of interesting photos');
         	console.log("Hooray, it worked. Marker added! Response: "+response);
         } else {
         	// something went wrong
@@ -149,21 +215,5 @@ var senddata = function($form) {
 
     // prevent default posting of form
     event.preventDefault();
+
 }
-
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // preload form with current lat/long                                                                                          //
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    jQuery(window).ready(function(){   
-
-        navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
-  
-        function handle_geolocation_query(position){  
-            $('#lat').attr('value',position.coords.latitude);  
-            $('#long').attr('value',position.coords.longitude);  
-        } 
-    });
-    
