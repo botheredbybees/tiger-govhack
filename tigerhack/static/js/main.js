@@ -1,12 +1,17 @@
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // map drawing stuff                                                                                                           //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			
+		
 			var map = L.map('map').setView([-42.8112, 147.2758], 13);
 			var osm = L.tileLayer('http://{s}.tile.cloudmade.com/572b6fba019c460cbc0c68b07da7dc2b/997/256/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 					maxZoom: 18
 			}).addTo(map);
+//			var track = new L.KML("/static/kml/Public_MarineAndCoastal.kml", {async: true});
+
+//    	track.on("loaded", function(e) { map.fitBounds(e.target.getBounds()); console.log(e.target.getBounds()); });
+
+//    	map.addLayer(track);
 
 
 
@@ -76,6 +81,7 @@
 
     var overlays = {
     "SW Pipes and Pits": stormwater,
+//    "Marine and Coastal": track,
 //    "Coastal protection areas": coastalprotection,
 //    "Erosion hazard zones": erosion,
 //    "test": test,

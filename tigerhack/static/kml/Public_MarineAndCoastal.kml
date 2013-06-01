@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns:atom="http://www.w3.org/2005/Atom" xmlns="http://www.opengis.net/kml/2.2"> <NetworkLink>
+<open>1</open>
+<name>Public/MarineAndCoastal</name>
+<LookAt>
+<longitude>148.71102581784356</longitude>
+<latitude>-43.01357711332575</latitude>
+<range>38025.44919853915</range>
+</LookAt>
+<Region>
+<LatLonBox>
+<north>-38.96877299844929</north>
+<south>-44.91257434098463</south>
+<east>150.46137638559938</east>
+<west>141.99204098367198</west>
+</LatLonBox>
+<Lod>
+<minLodPixels>-1</minLodPixels>
+<maxLodPixels>-1</maxLodPixels>
+</Lod>
+</Region>
+<Link>
+<viewRefreshMode>onStop</viewRefreshMode>
+<viewRefreshTime>2</viewRefreshTime>
+<href>http://services.thelist.tas.gov.au/arcgis/rest/services/Public/MarineAndCoastal/MapServer/export</href>
+<viewFormat>
+f=kmz&amp;bboxSR=4326&amp;imageSR=4326&amp;format=png24&amp;transparent=true&amp;bbox=[bboxWest],[bboxSouth],[bboxEast],[bboxNorth]&amp;size=[horizPixels],[vertPixels]&amp;
+</viewFormat>
+</Link>
+</NetworkLink>
+</kml>

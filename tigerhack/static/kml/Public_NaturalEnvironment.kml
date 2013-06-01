@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns:atom="http://www.w3.org/2005/Atom" xmlns="http://www.opengis.net/kml/2.2"> <NetworkLink>
+<open>1</open>
+<name>Public/NaturalEnvironment</name>
+<LookAt>
+<longitude>147.25119625914385</longitude>
+<latitude>-42.850384055783465</latitude>
+<range>29569.058835967182</range>
+</LookAt>
+<Region>
+<LatLonBox>
+<north>-28.209764626312165</north>
+<south>-44.88954219227352</south>
+<east>157.47270127343438</east>
+<west>141.3910372814161</west>
+</LatLonBox>
+<Lod>
+<minLodPixels>-1</minLodPixels>
+<maxLodPixels>-1</maxLodPixels>
+</Lod>
+</Region>
+<Link>
+<viewRefreshMode>onStop</viewRefreshMode>
+<viewRefreshTime>2</viewRefreshTime>
+<href>http://services.thelist.tas.gov.au/arcgis/rest/services/Public/NaturalEnvironment/MapServer/export</href>
+<viewFormat>
+f=kmz&amp;bboxSR=4326&amp;imageSR=4326&amp;format=png24&amp;transparent=true&amp;bbox=[bboxWest],[bboxSouth],[bboxEast],[bboxNorth]&amp;size=[horizPixels],[vertPixels]&amp;
+</viewFormat>
+</Link>
+</NetworkLink>
+</kml>
