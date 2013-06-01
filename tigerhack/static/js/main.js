@@ -2,7 +2,7 @@
     // map drawing stuff                                                                                                           //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			var map = L.map('map').setView([-42.8112, 147.2758], 12);
+			var map = L.map('map').setView([-42.8112, 147.2758], 13);
 			var osm = L.tileLayer('http://{s}.tile.cloudmade.com/572b6fba019c460cbc0c68b07da7dc2b/997/256/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 					maxZoom: 18
@@ -24,13 +24,15 @@
         minZoom: 19,
         maxZoom: 20
     });
+    
+    
     var LISTBasemap = new L.tileLayer("http://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Topographic/ImageServer/tile/{z}/{y}/{x}", {
         attribution: "Basemap &copy The LIST",
         maxZoom: 18
     });
     var listLayers = L.layerGroup([LISTBasemap, LISTBasemapWMS])
-
-
+    
+    
     var baselayers = {
     "Open Street Map": osm,
     //"Google Maps": ggl,
@@ -38,44 +40,45 @@
     };
     
     var gccAtt = 'GovHack 2103, <a href="http://creativecommons.org/licenses/by/3.0/au/">CC-BY</a>';
-//    var coastalrefuges = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
-//            layers: 'ips:Agcc_REF_CoastRefugia',
-//            format: 'image/png',
-//            transparent: true,
-//            //code:'EPSG:4326',           
-//						//srs: 'EPSG:4326',
-//						crs: L.CRS.EPSG4326,
-//						srs: L.CRS.EPSG4326,
-//						attribution: gccAtt
-//    });
-    //L.CRS.EPSG4326
      var stormwater = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
             layers: 'GCC_cc:Stormwater',
             format: 'image/png',
             transparent: true,
     attribution: gccAtt
-    });
+    });  
     
-    
-//    var GeologicUnit = new L.TileLayer.WMS("http://www.ga.gov.au/geows/geologicunits/oneg_aus_2_5m/wfs", {
-//            layers: 'EastAUS_GA_1M_BA',
+//    var coastalprotection = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms?SERVICE=WMS&", {
+//            layers: 'ips:E11_0_Waterway_and_Coastal_Protection_Code',
 //            format: 'image/png',
 //            transparent: true,
-//    attribution: gccAtt
+//    				attribution: gccAtt
+//    });    
+
+//    var erosion = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms?SERVICE=WMS&", {
+//            layers: 'ips:E14_0_Coastal_Erosion_Hazard_Code',
+//            format: 'image/png',
+//            transparent: true,
+//    				attribution: gccAtt
+//    });
+//    
+//    
+//    var test = new L.TileLayer.WMS("http://www.mrt.tas.gov.au/iwms/ecwp/ImageX.dll?dsinfo?layer=/mrt/images/all_tas/tas_geology250k.ecw", {
+//            layers: 'ALL_TAS_TAS_GEOLOGY250K.ECW',
+//            format: 'image/png',
+//            transparent: true,
+//    				attribution: gccAtt
 //    });
 
 
 
     map.addLayer(listLayers);
-    map.addLayer(stormwater);
-    //map.addLayer(GeologicUnit);
-    //map.addLayer(coastalrefuges);
-       
+   // map.addLayer(test);      
 
     var overlays = {
     "SW Pipes and Pits": stormwater,
-    //"Surface geologic units": GeologicUnit,
-    //"Coastal refuges": coastalrefuges,
+//    "Coastal protection areas": coastalprotection,
+//    "Erosion hazard zones": erosion,
+//    "test": test,
     
     };
  
@@ -91,12 +94,15 @@
 var request;
 // bind to the submit event of our form
 $("#addmarker").submit(function(event){
-    // abort any pending request
+    senddata($(this));
+});
+
+var senddata = function($form) {
+	// abort any pending request
     if (request) {
         request.abort();
     }
-    // setup some local variables
-    var $form = $(this);
+    
     // let's select and cache all the fields
     var $inputs = $form.find("input, select, button, textarea");
     // serialize the data in the form
@@ -115,9 +121,13 @@ $("#addmarker").submit(function(event){
     // callback handler that will be called on success
     request.done(function (response, textStatus, jqXHR){
         // log a message to the console
-        console.log("Hooray, it worked. Marker added! Response: "+response);
+        
         if (response == 'OK') {
         	$('#instructions').text('Thanks for posting, your data has been added to the moderator queue and will appear on the map shortly');
+        	console.log("Hooray, it worked. Marker added! Response: "+response);
+        } else {
+        	// something went wrong
+        	console.log("Error adding marker! Response: "+response);
         }
     });
 
@@ -139,4 +149,21 @@ $("#addmarker").submit(function(event){
 
     // prevent default posting of form
     event.preventDefault();
-});
+}
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // preload form with current lat/long                                                                                          //
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    jQuery(window).ready(function(){   
+
+        navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
+  
+        function handle_geolocation_query(position){  
+            $('#lat').attr('value',position.coords.latitude);  
+            $('#long').attr('value',position.coords.longitude);  
+        } 
+    });
+    
