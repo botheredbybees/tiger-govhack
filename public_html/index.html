@@ -84,7 +84,13 @@
             <!-- Example row of columns -->
             <div class="row">
                 <div class="span4">
-                    <h2>Keeping our waterways healthy</h2>
+                
+                    <h2>Keeping our waterways healthy 
+                    	<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#story">
+												<i class="icon-search icon-white"></i> read more...
+											</button>
+										</h2>
+								<div id="story" class="collapse">
                     <p>The map above shows the stormwater network for Glenorchy City Council areas and how it dishcharges into the Derwent Estuary. Pollution such as litter, chemicals, fertiliser and pet faeces is often transported in this stormwater into the Estuary. Managing stormwater quality is critical to managing the health of the estuary. A healthy Derwent Estuary is foundational to the quality of life of both the Glenorchy and wider Australian community The map shows clearly the nature, size and scale of the situation and who contributes to and can affect this water quality.</p><p>
 
 Local community members are obviously critical stakeholders. Using the map they can locate their sphere of activity in relation to the issue: where, they live, work shop and play. In this way their role in the issue becomes more transparent. Community members then become informed actors, able to change how their behavour contributes to the problem or solution.</p><p>
@@ -92,6 +98,7 @@ Local community members are obviously critical stakeholders. Using the map they 
 For example, people may chose to cease or modify their activities that pollute the stormwater, such as littering, allowing their pets to defecate anywhere, wantonly spraying garden chemicals and spreading fertiliser, or dumping chemicals. Alternatively they may act constructively by monitoring water quality, collecting rubbish and other pollutants, or working together to install pollution control devices.</p><p>
 
 Secondly, they can contribute to the above information by adding their own observations. This could be reporting pollution incidents, publishing monitoring data, or sharing “good news” stories such as working bees. This information adds to the overall story, further informing the community and providing a basis for informed action. It can also contribute to the Local and State Governments knowledge base, providing valuable information they can then integrate with their datasets and re-publish. They can also understand better what is happening and how and where their resources should be best deployed.</p>
+								</div>
                 </div>
                 <div class="span4">
                     <h2>Add a marker</h2>
@@ -103,7 +110,9 @@ Secondly, they can contribute to the above information by adding their own obser
 												<input type="text" id="long" name="long" value=""><br>
 												<label for="note">Details:</label>
 												<textarea id="note" name="note" rows="5"></textarea><br>
-												<input type="submit" value="Add the marker" class="btn btn-success fileinput-button" />
+												<button type="submit" class="btn btn-success">
+													<i class="icon-map-marker icon-white"></i> Add marker
+												</button>
 												<br>
 												
 												<br>
