@@ -1,9 +1,9 @@
 <?php 
-$hostname_cnELI = "localhost";
-$database_cnELI = "tiger";
-$username_cnELI = "root"; 
-$password_cnELI = "excalibur"; 
+$hostname_cn = "localhost";
+$database_cn = "tiger";
+$username_cn = "tiger"; 
+$password_cn = "VJPL52N3rrCBd6rN"; 
 
-$cnELI = mysql_pconnect($hostname_cnELI, $username_cnELI, $password_cnELI) or trigger_error(mysql_error(),E_USER_ERROR); 
-mysql_select_db($database_cnELI, $cnELI);
+$cn = mysql_pconnect($hostname_cn, $username_cn, $password_cn) or trigger_error(mysql_error(),E_USER_ERROR); 
+mysql_select_db($database_cn, $cn);
 ?>
