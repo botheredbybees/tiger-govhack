@@ -1,17 +1,12 @@
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // map drawing stuff                                                                                                           //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
+			
 			var map = L.map('map').setView([-42.8112, 147.2758], 13);
 			var osm = L.tileLayer('http://{s}.tile.cloudmade.com/572b6fba019c460cbc0c68b07da7dc2b/997/256/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 					maxZoom: 18
 			}).addTo(map);
-//			var track = new L.KML("/static/kml/Public_MarineAndCoastal.kml", {async: true});
-
-//    	track.on("loaded", function(e) { map.fitBounds(e.target.getBounds()); console.log(e.target.getBounds()); });
-
-//    	map.addLayer(track);
 
 
 
@@ -81,7 +76,6 @@
 
     var overlays = {
     "SW Pipes and Pits": stormwater,
-//    "Marine and Coastal": track,
 //    "Coastal protection areas": coastalprotection,
 //    "Erosion hazard zones": erosion,
 //    "test": test,
@@ -99,9 +93,9 @@
     // variable to hold request
 var request;
 // bind to the submit event of our form
-$("#addmarker").submit(function(event){
-    validate_user_submission($(this));
-});
+//$("#addmarker").submit(function(event){
+//    validate_user_submission($(this));
+//});
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,37 +147,44 @@ function loadImageFile() {
       
 }
 
-var validate_user_submission = function($form) {
+//var validate_user_submission = function($form) {
+function validate_user_submission() {
+    //alert ("SUBMITTING3	!");
 	// abort any pending request
     if (request) {
+    		console.log('aborting');
         request.abort();
     }
     
     // Validate
-	caption = document.getElementById("caption");
-	note = document.getElementById("note");
-	latitude = parseFloat(document.getElementById("lat")).value;
-	longitude = parseFloat(document.getElementById("long")).value;
+	caption = document.getElementById("caption").value;
+	console.log(caption);
+	note = document.getElementById("note").value;
+	console.log(note);
+	latitude = parseFloat(document.getElementById("lat").value);
+	console.log(latitude);
+	longitude = parseFloat(document.getElementById("long").value);
+	console.log(longitude);
 	if (latitude < -90 || latitude > 90) {
 		$('#marker_popup').text('Error: Latitude is out of range');
-		return;
+		return false;
 	}
 	if (longitude < -180 || longitude > 180) {
 		$('#marker_popup').text('Error: Longitude is out of range');
-		return;
+		return false;
 	}
 	if (note.length < 1) {
 		$('#marker_popup').text('Error: You need to add a note.');
-		return;
+		return false;
 	}
 	if (caption.length < 1) {
 		$('#marker_popup').text('Error: You need to add a title/caption.');
-		return;
+		return false;
 	}
 
 	// Make an AJAX call and get the response
 	var formData = new FormData($('#addmarker'));
-	jQuery.ajax('/marker/add', {
+	var request = jQuery.ajax('/marker/add', {
 		processData: false,
 		contentType: false,
     		data: formData,
@@ -221,5 +222,6 @@ var validate_user_submission = function($form) {
 
     // prevent default posting of form
     event.preventDefault();
+    return false;
 
 }

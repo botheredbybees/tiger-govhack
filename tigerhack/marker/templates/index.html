@@ -27,8 +27,10 @@
 				<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
 				
         <link rel="stylesheet" href="/static/css/main.css">
-
+	<link rel="stylesheet" href="/static/css/markers.css" />
         <script src="/static/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+	<script src="/static/js/exif.js"></script>
+	<script src="/static/js/binaryajax.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -103,26 +105,28 @@ Secondly, they can contribute to the above information by adding their own obser
                 <div class="span4">
                     <h2>Add a marker</h2>
                     <p id="instructions">Add a marker to the map with a report and/or a picture</p>
-                    <form id="addmarker">
-												<label for="lat">Latitude:</label>
-												<input type="text" id="lat" name="lat" value=""><br>
-												<label for="long">Longitude:</label>
-												<input type="text" id="long" name="long" value=""><br>
-												<label for="note">Details:</label>
-												<textarea id="note" name="note" rows="5"></textarea><br>
-												<button type="submit" class="btn btn-success">
-													<i class="icon-map-marker icon-white"></i> Add marker
-												</button>
-												<br>
-												
-												<br>
-
-
-										</form>
+                    <form id="addmarker" onsubmit="return validate_user_submission();">
+			<label for="caption">Give this site/location/photo a caption:</label>
+			<input type="input" id="caption" name="caption" value="" />
+			<label for="file">Upload Picture:</label>
+			<input type="file" name="userpic" id="userpic" value="" onchange="loadImageFile()"><br />
+			<input type="hidden" id="lat" name="lat" value="">
+			<input type="hidden" id="long" name="long" value="">
+			<label for="note">Interesting feature of photo (required):</label>
+			<textarea id="note" name="note" rows="5"></textarea><br>
+			<p id="instructions">Click on the map to place a marker where you took this photo.</p>
+			<button type="submit" class="btn btn-success">
+			<i class="icon-map-marker icon-white"></i> Add marker
+			</button>
+			<br>
+			<br>
+		</form>
                </div>
                 <div class="span4">
+                <div id="marker_popup">
                     <h2>Help</h2>
-                    <p>Some stuff here about how to select different maps and overlays xxcxxx</p>
+                    <p>Some stuff here about how to select different maps and overlays</p>
+		</div>
                 </div>
             </div>
 
@@ -135,13 +139,10 @@ Secondly, they can contribute to the above information by adding their own obser
         </div> <!-- /container -->
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-
         <script>window.jQuery || document.write('<script src="/static/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 
-
         <script src="/static/js/vendor/bootstrap.min.js"></script>
-				<script src="/static/js/vendor/KML.js"></script>
+
         <script src="/static/js/main.js"></script>
 				<script src="http://tiger.scriptforge.org:8000/marker/"></script>
 
