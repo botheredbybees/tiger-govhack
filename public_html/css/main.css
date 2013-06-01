@@ -1,5 +1,9 @@
 #map { height: 320px; }
 #note { width: 100%; }
+.bar {
+    height: 18px;
+    background: green;
+}
 
 
 
