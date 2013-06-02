@@ -5,5 +5,5 @@ from marker import views
 urlpatterns = patterns('',
     url(r'^$', views.all, name='all'),
     url(r'^(?P<marker_id>\d+)/$', views.detail, name='detail'),
-    url(r'^/add/$', views.add, name="add"),
+    url(r'^add/$', views.add, name="add"),
     )

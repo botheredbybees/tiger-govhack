@@ -10,3 +10,9 @@ python manage.py runserver 0.0.0.0:8000 (to run the server on port 8000)
 
 - public_html was some original prototype webpages before the python 
 backend was integrated
+
+Source code i at GitHub: http://github.com/faulteh/tiger-govhack
+
+Demo site is at http://tiger.scriptforge.org:8000
+
+Project Blog is at http://tiger.scriptforge.org/blog

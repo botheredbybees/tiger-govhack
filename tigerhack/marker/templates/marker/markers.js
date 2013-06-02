@@ -3,7 +3,6 @@
   var markers = new Array();
 {% for marker in marker_list %}
   markers[{{ marker.id }}] = L.marker([{{ marker.latitude }}, {{ marker.longitude }}]).addTo(map)
-     .bindPopup('<div id="marker_popup"><p>Loading...</p></div>')
      .on('click', function() { showmarker({{marker.id}}); });
 {% endfor %}
 {% else %}

@@ -40,6 +40,7 @@
     };
     
     var gccAtt = 'GovHack 2103, <a href="http://creativecommons.org/licenses/by/3.0/au/">CC-BY</a>';
+    var cccAtt = '&copy; Clarence City Council';
      var stormwater = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms", {
             layers: 'GCC_cc:Stormwater',
             format: 'image/png',
@@ -47,19 +48,19 @@
     attribution: gccAtt
     });  
     
-//    var coastalprotection = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms?SERVICE=WMS&", {
-//            layers: 'ips:E11_0_Waterway_and_Coastal_Protection_Code',
-//            format: 'image/png',
-//            transparent: true,
-//    				attribution: gccAtt
-//    });    
+    var coastalprotection = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms?SERVICE=WMS&", {
+            layers: 'ips:E11_0_Waterway_and_Coastal_Protection_Code',
+            format: 'image/png',
+            transparent: true,
+    				attribution: cccAtt
+    });    
 
-//    var erosion = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms?SERVICE=WMS&", {
-//            layers: 'ips:E14_0_Coastal_Erosion_Hazard_Code',
-//            format: 'image/png',
-//            transparent: true,
-//    				attribution: gccAtt
-//    });
+    var erosion = new L.TileLayer.WMS("http://maps.gcc.tas.gov.au:8080/geoserver/gwc/service/wms?SERVICE=WMS&", {
+            layers: 'ips:E14_0_Coastal_Erosion_Hazard_Code',
+            format: 'image/png',
+            transparent: true,
+    				attribution: cccAtt
+    });
 //    
 //    
 //    var test = new L.TileLayer.WMS("http://www.mrt.tas.gov.au/iwms/ecwp/ImageX.dll?dsinfo?layer=/mrt/images/all_tas/tas_geology250k.ecw", {
@@ -72,12 +73,12 @@
 
 
     map.addLayer(listLayers);
-   // map.addLayer(test);      
+    map.addLayer(stormwater);      
 
     var overlays = {
     "SW Pipes and Pits": stormwater,
-//    "Coastal protection areas": coastalprotection,
-//    "Erosion hazard zones": erosion,
+    "Coastal protection areas": coastalprotection,
+    "Erosion hazard zones": erosion,
 //    "test": test,
     
     };
@@ -106,10 +107,10 @@ var request;
 
         navigator.geolocation.getCurrentPosition(handle_geolocation_query);  
   
-        function handle_geolocation_query(position){  
-            $('#lat').attr('value',position.coords.latitude);  
-            $('#long').attr('value',position.coords.longitude);  
-        } 
+//        function handle_geolocation_query(position){  
+//            $('#lat').attr('value',position.coords.latitude);  
+//            $('#long').attr('value',position.coords.longitude);  
+//        } 
     });
     
 
@@ -147,9 +148,7 @@ function loadImageFile() {
       
 }
 
-//var validate_user_submission = function($form) {
 function validate_user_submission() {
-    //alert ("SUBMITTING3	!");
 	// abort any pending request
     if (request) {
     		console.log('aborting');
@@ -165,6 +164,10 @@ function validate_user_submission() {
 	console.log(latitude);
 	longitude = parseFloat(document.getElementById("long").value);
 	console.log(longitude);
+	if (isNaN(latitude) || isNaN(latitude)){
+            $('#marker_popup').text('Error: Need to click on the map to tell us where your submission is.');
+	    return false;
+        }
 	if (latitude < -90 || latitude > 90) {
 		$('#marker_popup').text('Error: Latitude is out of range');
 		return false;
@@ -182,13 +185,14 @@ function validate_user_submission() {
 		return false;
 	}
 
-	// Make an AJAX call and get the response
-	var formData = new FormData($('#addmarker'));
-	var request = jQuery.ajax('/marker/add', {
+	$('#addmarker').submit();
+
+/*	var formData = new FormData($('#addmarker')).serialize();
+	var request = jQuery.ajax('/marker/add/', {
 		processData: false,
 		contentType: false,
     		data: formData,
-		type: "POST"
+		type: 'GET'
 	});    
 
     // callback handler that will be called on success
@@ -222,6 +226,5 @@ function validate_user_submission() {
 
     // prevent default posting of form
     event.preventDefault();
-    return false;
-
+*/
 }

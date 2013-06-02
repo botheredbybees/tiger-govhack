@@ -51,7 +51,7 @@
                     <div class="nav-collapse collapse">
                         <ul class="nav">
                             <li class="active"><a href="#">Home</a></li>
-                            <li><a href="http://tiger.scriptforge.org/blog/">About</a></li>
+                            <li><a href="http://tiger.scriptforge.org/blog/?p=28">About</a></li>
 <!--                            <li><a href="#contact">Contact</a></li>-->
 <!--                            <li class="dropdown">-->
 <!--                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>-->
@@ -87,13 +87,11 @@
             <div class="row">
                 <div class="span4">
                 
-                    <h2>Keeping our waterways healthy 
-                    	<button type="button" class="btn btn-success" data-toggle="collapse" data-target="#story">
+                    <h2>Waterways Health</h2>
+								
+                    <p>The map above shows the stormwater network for Glenorchy City Council areas and how it dishcharges into the Derwent Estuary. Pollution such as litter, chemicals, fertiliser and pet excrement are transported by these pipes to the Estuary. Managing stormwater quality is critical to managing the health of the waterway. A healthy Derwent Estuary is critical to the quality of life of both the Glenorchy and wider Australian community. The map shows clearly the nature, size and scale of the situation and who contributes to and can affect this water quality.</p><button type="button" class="btn btn-success" data-toggle="collapse" data-target="#story">
 												<i class="icon-search icon-white"></i> read more...
-											</button>
-										</h2>
-								<div id="story" class="collapse">
-                    <p>The map above shows the stormwater network for Glenorchy City Council areas and how it dishcharges into the Derwent Estuary. Pollution such as litter, chemicals, fertiliser and pet faeces is often transported in this stormwater into the Estuary. Managing stormwater quality is critical to managing the health of the estuary. A healthy Derwent Estuary is foundational to the quality of life of both the Glenorchy and wider Australian community The map shows clearly the nature, size and scale of the situation and who contributes to and can affect this water quality.</p><p>
+											</button><div id="story" class="collapse"><p>
 
 Local community members are obviously critical stakeholders. Using the map they can locate their sphere of activity in relation to the issue: where, they live, work shop and play. In this way their role in the issue becomes more transparent. Community members then become informed actors, able to change how their behavour contributes to the problem or solution.</p><p>
 
@@ -101,11 +99,65 @@ For example, people may chose to cease or modify their activities that pollute t
 
 Secondly, they can contribute to the above information by adding their own observations. This could be reporting pollution incidents, publishing monitoring data, or sharing “good news” stories such as working bees. This information adds to the overall story, further informing the community and providing a basis for informed action. It can also contribute to the Local and State Governments knowledge base, providing valuable information they can then integrate with their datasets and re-publish. They can also understand better what is happening and how and where their resources should be best deployed.</p>
 								</div>
+								
+								<h2>Help</h2>
+								<div class="accordion" id="accordion2">
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+												Map Navigation
+											</a>
+										</div>
+										<div id="collapseOne" class="accordion-body collapse">
+											<div class="accordion-inner">
+												<p>Zoom buttons and layer selection buttons on top left of map interface as below...</p>
+												<img src="/static/img/Zoom-button.png" alt="zoom button" /> 
+												<img src="/static/img/Layer-selection-button.png" alt="layer selection button" />
+												<p>With the layer selection you can select which base layer and turn on the stormwater (SW) pipes dataset.</p>
+												<img src="/static/img/Layer-selection.png" alt="layer selection example" />
+											</div>
+										</div>
+									</div>
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+												Viewing User Added Data
+											</a>
+										</div>
+										<div id="collapseTwo" class="accordion-body collapse">
+											<div class="accordion-inner">
+												<p>Visitors to the site can upload photos and observations. Each of these is displayed as a marker on the map:</p>
+												<img src="/static/img/markers.png" alt="markers on the map" />
+												<p>Clicking on any marker will load the associated story on to the page:</p>
+												<img src="/static/img/userentered.png" alt="layer selection example" />
+												
+											</div>
+										</div>
+									</div>
+									<div class="accordion-group">
+										<div class="accordion-heading">
+											<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseThree">
+												Adding Data
+											</a>
+										</div>
+										<div id="collapseThree" class="accordion-body collapse">
+											<div class="accordion-inner">
+												<p>To add your own observations and findings fill in the 'Add a Marker' form:</p>
+												<img src="/static/img/AddDataForm-257x300.png" alt="layer selection example" />
+												<p>Fill in the caption and notes fields, (optionally) upload a photo and click on the map to set your marker. Click the 'Add marker' button and your information will be sent to the site moderator for inclusion...</p>
+												<p><strong>Thankyou for adding a site marker.<br>It has been added to the moderation queue</strong></p>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								
                 </div>
                 <div class="span4">
                     <h2>Add a marker</h2>
                     <p id="instructions">Add a marker to the map with a report and/or a picture</p>
-                    <form id="addmarker" onsubmit="return validate_user_submission();">
+                    <form id="addmarker" onsubmit="return validate_user_submission();"
+                    action="/marker/add/" method="POST">
 			<label for="caption">Give this site/location/photo a caption:</label>
 			<input type="input" id="caption" name="caption" value="" />
 			<label for="file">Upload Picture:</label>
@@ -124,8 +176,10 @@ Secondly, they can contribute to the above information by adding their own obser
                </div>
                 <div class="span4">
                 <div id="marker_popup">
-                    <h2>Help</h2>
-                    <p>Some stuff here about how to select different maps and overlays</p>
+{% if message %}
+<h4>{{ message}}</h4>
+{% endif %}
+                    
 		</div>
                 </div>
             </div>
@@ -140,17 +194,12 @@ Secondly, they can contribute to the above information by adding their own obser
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="/static/js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+	<script src="http://malsup.github.com/jquery.form.js"></script> 
 
         <script src="/static/js/vendor/bootstrap.min.js"></script>
 
         <script src="/static/js/main.js"></script>
 				<script src="http://tiger.scriptforge.org:8000/marker/"></script>
 
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
     </body>
 </html>
