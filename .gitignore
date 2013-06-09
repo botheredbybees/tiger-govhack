@@ -1,5 +1,6 @@
 *.py[cod]
 settings.py
+tigerhack/tigerhack/settings.py
 # C extensions
 *.so
 

@@ -1,14 +1,18 @@
+var map, geoJsonLayer;
+$(document).ready(function(){
+	jsonconverter = esriConverter();
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // map drawing stuff                                                                                                           //
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			var map = L.map('map').setView([-42.8112, 147.2758], 13);
+			map = L.map('map').setView([-42.8112, 147.2758], 13);
 			var osm = L.tileLayer('http://{s}.tile.cloudmade.com/572b6fba019c460cbc0c68b07da7dc2b/997/256/{z}/{x}/{y}.png', {
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
 					maxZoom: 18
 			}).addTo(map);
 
-
+// This code has some extra stuff to try to read EXIF data but it is unfinished
+map.on('doubleclick', addUserMarker);
 
     //var center = new L.LatLng(-42.8232,147.2555);
     //var map = new L.Map('map', { center: center, zoom: 14, attributionControl:true, zoomControl:false});    
@@ -79,13 +83,61 @@
     "SW Pipes and Pits": stormwater,
     "Coastal protection areas": coastalprotection,
     "Erosion hazard zones": erosion,
+    //"Seagrasses": geoJsonLayer
 //    "test": test,
     
     };
  
     //Layer control
     L.control.layers(baselayers, overlays, {position: 'topleft'}).addTo(map);
+	//fetch sample features, convert to geojson, and map them
 
+	if (geoJsonLayer){
+		map.removeLayer(geoJsonLayer)
+	}
+
+	// clarence coastal vegetation
+	src = "http://services.thelist.tas.gov.au/arcgis/rest/services/Public/MarineAndCoastal/MapServer/71/query?where=shape.area%3E0&text=&objectIds=&time=&geometry=&geometryType=esriGeometryPolygon&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=&returnGeometry=true&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&f=pjson&callback=convert2json";
+	
+	var script = document.createElement('script');
+		script.setAttribute('src', src);
+		script.setAttribute('id', 'jsonScript');
+		script.setAttribute('type', 'text/javascript');
+		document.getElementsByTagName("head")[0].appendChild(script);
+	
+});
+var convert2json = function(result) {
+		//console.log(result);
+		esriObject = result;
+		if (!esriObject){
+			console.log('no esriObject found');
+			return undefined;
+		}
+
+		gcFeats = jsonconverter.toGeoJson(esriObject);
+		console.log('tiger');
+		console.log(gcFeats);
+		if (gcFeats && gcFeats.features){
+			//symbol = getAppropriateStyle(gcFeats.features[0].geometry.type);
+			geoJsonLayer = L.geoJson(gcFeats,{
+				style: function(feature) {
+        switch (feature.properties.CONDITION) {
+            case 'na': return {color: "#ffffff"};
+            case '4':   return {color: "#D11919"};
+            case '3':   return {color: "#24AB38"};
+            case '2':   return {color: "#3CC7C5"};
+            case '1':   return {color: "#C44185"};
+        }
+    },
+				onEachFeature: onEachFeature,
+				pointToLayer: function(feature,latlng){
+					//console.log(latlng);
+				  return L.circleMarker(latlng,ptSymbol);
+				}
+			});
+			geoJsonLayer.addTo(map);
+		}
+	}
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // form processing                                                                                                             //
@@ -116,8 +168,7 @@ var request;
 
 // Add new site photo image reading, form validation and submission fucntions
 
-// This code has some extra stuff to try to read EXIF data but it is unfinished
-map.on('click', addUserMarker);
+
 
 var usermarker = L.marker();
 usermarker.addTo(map);
@@ -228,3 +279,59 @@ function validate_user_submission() {
     event.preventDefault();
 */
 }
+
+      var map, ptSymbol, lineSymbol, polySymbol, jsonconverter, geoJsonLayer;
+      //default symbols for features
+      ptSymbol = {
+        radius: 8,
+        fillColor: "#ff7800",
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+      };
+
+      lineSymbol = {
+        "color": "#ff0000",
+        "weight": 4,
+        "opacity": 0.7
+      };
+
+      polySymbol = {
+        "fillColor": "#ff7800",
+        "color": "#000",
+        "weight": 1,
+        "opacity": 1,
+        "fillOpacity": 0.8
+      };
+
+      //get style object for line or polygon
+      function getAppropriateStyle(geomType){
+      //console.log(geomType);
+        var s;
+        if (geomType === "LineString" || geomType === "MultiLineString"){
+          s = lineSymbol;
+        }
+        else if (geomType === "Polygon" || geomType === "MultiPolygon"){
+          s = polySymbol;
+        }
+        return s;
+      }
+
+      //function to set popup for feature
+      function onEachFeature(feature, layer) {
+        var popupContent = "", prop;
+        if (feature.properties) {
+          for(prop in feature.properties){
+            popupContent += "<p>" + prop + ": " + feature.properties[prop] + "</p>";
+          }
+        }
+				switch (feature.properties.CONDITION) {
+            case 'na': popupContent += "<p>not applicable - non-native vegetation</p>";break;
+            case '4':  popupContent += "<p>Grossly altered vegetation structure in otherwise weed infested vegetation (> 90% weeds)</p>";break;
+            case '3':  popupContent += "<p>Vegetation structurally and floristically intact, weed invasion less than 10% cover. </p>";break;
+            case '2':  popupContent += "<p>Vegetation structurally or floristically altered and or greater than 50% cover of vegetation in shrub and ground layer is native. </p>";break;
+            case '1':  popupContent += "<p>Vegetation structurally or floristically altered and or greater than 50% cover of vegetation in shrub or ground layer exotic. </p>";break;
+        }
+        layer.bindPopup(popupContent);
+      }
